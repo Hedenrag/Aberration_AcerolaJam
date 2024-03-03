@@ -49,6 +49,10 @@ public class Sample_Move : MonoBehaviour
         if(Move){
             GameObject.Find("Cylinder").transform.Translate(new Vector3(0,0,value_add));
 
+            cube.UpdateMatrix();
+            cylinder.UpdateMatrix();
+            cube_sub_cylinder.UpdateMatrix();
+
             // Do the operation subtration between the cube and the cylinder 
             CSGOp.merge_brushes(Operation.OPERATION_SUBTRACTION, cube, cylinder, ref cube_sub_cylinder, 0.005f);
 

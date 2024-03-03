@@ -259,9 +259,12 @@ namespace LibCSG{
         public Build2DFaces(CSGBrush brush, int face_idx, CSGBrush brush_a) {
             // Convert 3D vertex points to 2D.
             Vector3[] points_3D = {
-                brush_a.obj.transform.InverseTransformPoint(brush.obj.transform.TransformPoint(brush.faces[face_idx].vertices[0])),
-                brush_a.obj.transform.InverseTransformPoint(brush.obj.transform.TransformPoint(brush.faces[face_idx].vertices[1])),
-                brush_a.obj.transform.InverseTransformPoint(brush.obj.transform.TransformPoint(brush.faces[face_idx].vertices[2]))
+                //brush_a.obj.transform.InverseTransformPoint(brush.obj.transform.TransformPoint(brush.faces[face_idx].vertices[0])),
+                //brush_a.obj.transform.InverseTransformPoint(brush.obj.transform.TransformPoint(brush.faces[face_idx].vertices[1])),
+                //brush_a.obj.transform.InverseTransformPoint(brush.obj.transform.TransformPoint(brush.faces[face_idx].vertices[2]))
+                brush_a.transformMatrix.inverse.MultiplyPoint(brush.transformMatrix.MultiplyPoint(brush.faces[face_idx].vertices[0])),
+                brush_a.transformMatrix.inverse.MultiplyPoint(brush.transformMatrix.MultiplyPoint(brush.faces[face_idx].vertices[1])),
+                brush_a.transformMatrix.inverse.MultiplyPoint(brush.transformMatrix.MultiplyPoint(brush.faces[face_idx].vertices[2]))
             };
             plane = new PlaneCSG(points_3D[0], points_3D[1], points_3D[2]);
             to_3D = new Transform_to_2DFace();
@@ -801,7 +804,8 @@ namespace LibCSG{
                     point_3D = brush.faces[face_idx].vertices[i];
                 }
                 else{
-                    point_3D = brush_a.obj.transform.InverseTransformPoint(brush.obj.transform.TransformPoint(brush.faces[face_idx].vertices[i]));
+                    //point_3D = brush_a.obj.transform.InverseTransformPoint(brush.obj.transform.TransformPoint(brush.faces[face_idx].vertices[i]));
+                    point_3D = brush_a.transformMatrix.inverse.MultiplyPoint(brush.transformMatrix.MultiplyPoint(brush.faces[face_idx].vertices[i]));
                 }
 
                 if (plane.has_point(point_3D, CSGBrush.CMP_EPSILON)) {
@@ -816,7 +820,8 @@ namespace LibCSG{
                         next_point_3D = brush.faces[face_idx].vertices[(i + 1) % 3];
                     }
                     else{
-                        next_point_3D = brush_a.obj.transform.InverseTransformPoint(brush.obj.transform.TransformPoint(brush.faces[face_idx].vertices[(i + 1) % 3]));
+                        //next_point_3D = brush_a.obj.transform.InverseTransformPoint(brush.obj.transform.TransformPoint(brush.faces[face_idx].vertices[(i + 1) % 3]));
+                        next_point_3D = brush_a.transformMatrix.inverse.MultiplyPoint(brush.transformMatrix.MultiplyPoint(brush.faces[face_idx].vertices[(i + 1) % 3]));
                     }
 
                     if (plane.has_point(next_point_3D, CSGBrush.CMP_EPSILON)) {

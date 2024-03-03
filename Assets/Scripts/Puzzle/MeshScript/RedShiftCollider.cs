@@ -1,107 +1,118 @@
+using LibCSG;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
-using LibCSG;
-using UnityEngine.Rendering.Universal;
 
 public class RedShiftCollider : MonoBehaviour
 {
     [SerializeField] GameObject BooleanPrefab;
     public CSGBrush brush;
 
-    Dictionary<Collider, BooleanOperator> booleanOperators = new();
+    Dictionary<GameObject, BooleanOperator> booleanOperators = new();
+
+    private void Awake()
+    {
+        brush = new(gameObject);
+        brush.build_from_mesh(gameObject.GetComponent<MeshFilter>().mesh);
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
-        var blueBrush = collision.transform.GetComponent<BlueShiftCollider>().brush;
-        var meshFilter = Instantiate(BooleanPrefab).GetComponent<MeshFilter>();
-        booleanOperators.Add(collision.collider, new BooleanOperator(brush, blueBrush, meshFilter));
+        BlueShiftCollider blueShiftCollider = collision.gameObject.GetComponent<BlueShiftCollider>();
+        BooleanOperator op = new(brush, blueShiftCollider.brush, Instantiate(BooleanPrefab, transform.parent), transform);
+        blueShiftCollider.booleanOperators.Add(op);
+        booleanOperators.Add(collision.gameObject, op);
     }
-
     private void OnCollisionExit(Collision collision)
     {
-        booleanOperators.Remove(collision.collider);
+        booleanOperators[collision.gameObject].Destroy();
+        collision.gameObject.GetComponent<BlueShiftCollider>().booleanOperators.Remove(booleanOperators[collision.gameObject]);
+        booleanOperators.Remove(collision.gameObject);
     }
 
-    void Start()
+    private void Update()
     {
-        brush = new();
-        StartCoroutine(DoCalculation());
-    }
-
-
-
-    IEnumerator DoCalculation()
-    {
-        while (true)
+        if (transform.hasChanged)
         {
-            foreach (var boolOp in booleanOperators.Values)
+            transform.hasChanged = false;
+
+            foreach (var value in booleanOperators.Values)
             {
-                if (boolOp.OperationFinished)
-                {
-                    boolOp.AssignMesh();
-#pragma warning disable CS4014 
-                    boolOp.DoCalculations();
-#pragma warning restore CS4014
-                }
+                value.PerformBool();
             }
-            yield return new WaitForEndOfFrame();
         }
     }
 
-
-
-
-
-
-    class BooleanOperator
+    private void LateUpdate()
     {
-        public bool OperationFinished => operationFinished;
-        bool operationFinished;
+        foreach (var value in booleanOperators.Values)
+        {
+            value.updated = false;
+        }
+    }
 
-        CSGBrush redBox;
-        CSGBrush blueBox;
+    public class BooleanOperator
+    {
+        public bool updated = false;
 
-        CSGBrushOperation CSGOp;
+        GameObject gameObject;
+        Transform target;
+
+        CSGBrush brushA;
+        CSGBrush brushB;
 
         CSGBrush result;
 
         Mesh mesh;
-        MeshFilter meshFilter;
 
-        public BooleanOperator(CSGBrush redBrush, CSGBrush blueBrush, MeshFilter result)
+        CSGBrushOperation operation;
+
+        MeshCollider collider;
+        MeshFilter filter;
+
+        public BooleanOperator(CSGBrush brush_a, CSGBrush brush_b, GameObject g, Transform target)
         {
-            redBox = redBrush;
-            blueBox = blueBrush;
-            operationFinished = false;
-            CSGOp = new();
-            this.result = new CSGBrush();
+            gameObject = g;
+            brushA = brush_a;
+            brushB = brush_b;
+
+            operation = new();
+
+            result = new(g);
+
             mesh = new Mesh();
-            DoCalculations();
-            meshFilter = result;
+
+            collider = g.GetComponent<MeshCollider>();
+            filter = g.GetComponent<MeshFilter>();
+            this.target = target;
         }
 
-        public void AssignMesh()
+        public void PerformBool()
         {
-            meshFilter.mesh = mesh;
+            if (updated) return;
+            updated = true;
+
+            brushA.UpdateMatrix();
+            brushB.UpdateMatrix();
+            result.UpdateMatrix();
+
+            operation.merge_brushes(Operation.OPERATION_INTERSECTION, brushA, brushB, ref result);
+
+            mesh = result.getMesh();
+            filter.sharedMesh = mesh;
+            if(mesh.vertexCount > 0)
+            {
+                collider.sharedMesh = null;
+            }
+
+            gameObject.transform.SetPositionAndRotation(target.position, target.rotation);
         }
 
-        public async Task<Mesh> DoCalculations()
+        public void Destroy()
         {
-            var task = await Task.Run(CSGOperation);
-            operationFinished = true;
-            return task;
+            GameObject.Destroy(gameObject);
         }
 
-        Mesh CSGOperation()
-        {
-            CSGOp.merge_brushes(Operation.OPERATION_INTERSECTION, redBox, blueBox, ref result, 0.005f);
-            return result.getMesh(mesh);
-        }
     }
-
 }
-
-
