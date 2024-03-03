@@ -9,6 +9,8 @@ public class PuzzleItem : MonoBehaviour
     [SerializeField] Transform RedObject;
     [SerializeField] Transform BlueObject;
 
+    [SerializeField] float shiftMultiplier = 1f;
+
     [SerializeField] Vector3 maxShift = Vector3.one * 5f;
 
     void OnEnable()
@@ -20,12 +22,12 @@ public class PuzzleItem : MonoBehaviour
 
     public void VerticalShift(Transform shifter, float amount)
     {
-        currentShift += shifter.up * amount;
+        currentShift += shifter.up * amount * shiftMultiplier;
         ApplyShift();
     }
     public void HorizontalShift(Transform shifter, float amount)
     {
-        currentShift += shifter.right * amount;
+        currentShift += shifter.right * amount * shiftMultiplier;
         ApplyShift();
     }
 

@@ -100,10 +100,11 @@ public class RedShiftCollider : MonoBehaviour
             operation.merge_brushes(Operation.OPERATION_INTERSECTION, brushA, brushB, ref result);
 
             mesh = result.getMesh();
+            mesh.name = "bool result";
             filter.sharedMesh = mesh;
             if(mesh.vertexCount > 0)
             {
-                collider.sharedMesh = null;
+                collider.sharedMesh = mesh;
             }
 
             gameObject.transform.SetPositionAndRotation(target.position, target.rotation);

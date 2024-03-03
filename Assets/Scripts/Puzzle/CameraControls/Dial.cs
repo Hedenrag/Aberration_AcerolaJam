@@ -6,8 +6,9 @@ using UnityEngine.EventSystems;
 
 public class Dial : MonoBehaviour
 {
+    [SerializeField] float maxRotation;
     public UnityEvent<float> OnTurnDial;
-
+    float currentAngle;
     public void Drag(BaseEventData bdata)
     {
         PointerEventData data = (PointerEventData)bdata;
@@ -18,6 +19,12 @@ public class Dial : MonoBehaviour
 
         float angle = -Vector2.SignedAngle(vector, vector + data.delta);
 
+        if(Mathf.Abs(currentAngle + angle) > maxRotation)
+        {
+            var temp = Mathf.Clamp(currentAngle + angle, -maxRotation, maxRotation);
+            angle = temp - currentAngle;
+        }
+        currentAngle += angle;
         Debug.Log(angle);
         transform.Rotate(Vector3.up * angle, Space.Self);
         OnTurnDial.Invoke(angle);
