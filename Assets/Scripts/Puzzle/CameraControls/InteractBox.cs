@@ -8,7 +8,8 @@ public class InteractBox : Interactuable
 {
     [SerializeField] CinemachineVirtualCamera v_camera;
 
-    [SerializeField] Camera r_camera;
+    [SerializeField] CameraPosition r_camera;
+    [SerializeField] LayerMask raycastMask;
 
     bool interacting = false;
 
@@ -26,7 +27,7 @@ public class InteractBox : Interactuable
         }
     }
 
-    
+
 
     void StartInteracting()
     {
@@ -47,24 +48,31 @@ public class InteractBox : Interactuable
     {
         foreach (var puzzleItem in GenerateMesh.puzzleItems)
         {
-            Vector3 pos = r_camera.WorldToViewportPoint(puzzleItem.transform.position);
+            Vector3 pos = CameraPosition.Camera.WorldToViewportPoint(puzzleItem.transform.position);
             if (pos.x < 0f || pos.x > 1f || pos.y < 0f || pos.y > 1f || pos.z < 0f)
             {
                 continue;
             }
-            puzzleItem.HorizontalShift(r_camera.transform, amount);
+
+            if (!Physics.Linecast(r_camera.transform.position, puzzleItem.transform.position, out RaycastHit hit, raycastMask) || hit.transform.IsChildOf(puzzleItem.transform))
+            {
+                puzzleItem.HorizontalShift(r_camera.transform, amount);
+            }
         }
     }
     public void ShiftVertical(float amount)
     {
-        foreach(var puzzleItem in GenerateMesh.puzzleItems)
+        foreach (var puzzleItem in GenerateMesh.puzzleItems)
         {
-            Vector3 pos = r_camera.WorldToViewportPoint(puzzleItem.transform.position);
-            if(pos.x < 0f || pos.x > 1f || pos.y < 0f || pos.y > 1f || pos.z <0f)
+            Vector3 pos = CameraPosition.Camera.WorldToViewportPoint(puzzleItem.transform.position);
+            if (pos.x < 0f || pos.x > 1f || pos.y < 0f || pos.y > 1f || pos.z < 0f)
             {
                 continue;
             }
-            puzzleItem.VerticalShift(r_camera.transform, amount);
+            if (!Physics.Linecast(r_camera.transform.position, puzzleItem.transform.position, out RaycastHit hit, raycastMask) || hit.transform.IsChildOf(puzzleItem.transform))
+            {
+                puzzleItem.VerticalShift(r_camera.transform, amount);
+            }
         }
     }
 }

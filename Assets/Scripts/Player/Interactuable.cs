@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Interactuable : MonoBehaviour
 {
+
     protected void OnTriggerEnter(Collider other)
     {
         var playerInteractor = other.gameObject.GetComponent<PlayerInteractions>();

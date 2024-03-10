@@ -12,7 +12,9 @@ public class PlayerJump : MonoBehaviour
 
     bool _jumped;
     bool _jumpInCD = false;
-    float _jumpCDTime = 0.2f;
+    float _jumpCDTime = 0.1f;
+
+    public bool blockJump;
 
     private void OnValidate()
     {
@@ -22,6 +24,7 @@ public class PlayerJump : MonoBehaviour
 
     void Update()
     {
+        if (blockJump) return;
         if(Input.GetKeyDown(KeyCode.Space))
         {
             TryJump();

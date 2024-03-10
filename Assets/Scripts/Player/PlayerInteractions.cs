@@ -21,7 +21,7 @@ public class PlayerInteractions : MonoBehaviour
     public void RemoveInteractuable(Interactuable iinteractuable)
     {
         interactuables.Remove(iinteractuable);
-
+        playerCanvas.ShowInteractButton(false);
     }
 
     public void BlockInput(bool block)
@@ -41,8 +41,6 @@ public class PlayerInteractions : MonoBehaviour
         {
             Vector3 vect = i.transform.position - cameraT.position;
             float priority = Vector3.SqrMagnitude(vect) / Vector3.Dot(vect.normalized, transform.forward);
-
-            Debug.Log($"Priority {priority}");
 
             if (float.IsNegative(priority)) continue;
 

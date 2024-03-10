@@ -26,7 +26,7 @@ public class Dial : MonoBehaviour
         }
         currentAngle += angle;
         Debug.Log(angle);
-        transform.Rotate(Vector3.up * angle, Space.Self);
+        transform.Rotate(Vector3.forward * angle, Space.Self);
         OnTurnDial.Invoke(angle);
     }
 }
