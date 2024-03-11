@@ -24,6 +24,7 @@ public class PlayerJump : MonoBehaviour
 
     void Update()
     {
+        Debug.Log("_groundDetection:" + _groundDetection.Grounded);
         if (blockJump) return;
         if(Input.GetKeyDown(KeyCode.Space))
         {

@@ -319,7 +319,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _height: -0.5
-  _castRadius: 0.49
+  _castRadius: 0.34
   _castLength: 0.1
   _maxAngle: 45
   _groundMask:
@@ -481,7 +481,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1d18c485741eb14d801c1b14bfa4bec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _jumpForce: 20
+  _jumpForce: 15
   _groundDetection: {fileID: 7107131712975234542}
   _rb: {fileID: 2391587709547988005}
   blockJump: 0

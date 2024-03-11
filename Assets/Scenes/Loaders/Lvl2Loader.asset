@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3aa7ccffae6807e4fa24c0a6530479cb, type: 3}
   m_Name: Lvl2Loader
   m_EditorClassIdentifier: 
-  Working: 0
+  Working: 1
   sceneAssets:
-  - {fileID: 0}
-  sceneIndex: 00000000
+  - {fileID: 102900000, guid: 557231f21ecdc2f47983deb6d604fa8c, type: 3}
+  sceneIndex: 04000000
   sceneNames:
-  - 
+  - Level2Scene

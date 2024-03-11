@@ -46,6 +46,7 @@ public class GroundDetection : MonoBehaviour
                 _grounded = false;
                 _sliding = true;
                 _slideNormal = hitInfo.normal;
+                Debug.DrawRay(hitInfo.point, hitInfo.normal, Color.red, Time.fixedDeltaTime);
             }
         }
         else
