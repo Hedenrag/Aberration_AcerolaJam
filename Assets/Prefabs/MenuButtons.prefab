@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 7241142909043408748}
   - component: {fileID: 1646760304999263183}
   - component: {fileID: 5254983544038637662}
+  - component: {fileID: 2816627572710442475}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -301,6 +302,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2816627572710442475}
+        m_TargetAssemblyTypeName: CreateAudio, Assembly-CSharp
+        m_MethodName: PlayAudio
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: ee2cbc685d7f8e2428a133e9aab830c0,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7241142909043408748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,6 +359,19 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 2816627572710442475}
+          m_TargetAssemblyTypeName: CreateAudio, Assembly-CSharp
+          m_MethodName: PlayAudio
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 8300000, guid: 23e2542271668ee4a82eaafefeee498f,
+              type: 3}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
@@ -376,6 +403,20 @@ MonoBehaviour:
   NormalPos: {fileID: 3572143743774052586}
   HoverPos: {fileID: 6541670259216772034}
   PressPos: {fileID: 2337347811781019335}
+--- !u!114 &2816627572710442475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4429402051285122212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e9bdd71458fa244181615121f595f9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AudioSource: {fileID: 4326161383335689035, guid: a85e60edfc2173148ab0f3ec80f527e8,
+    type: 3}
 --- !u!1 &5783017734943271081
 GameObject:
   m_ObjectHideFlags: 0
